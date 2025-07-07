@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Moon, Sun, Mail, Heart } from "lucide-react"
+import { Moon, Sun, Mail, Heart, ClipboardCopy, Check } from "lucide-react"
 
 const techStack = [
   { name: "Flutter", color: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200" },
@@ -15,6 +15,7 @@ const techStack = [
 
 export default function Portfolio() {
   const [darkMode, setDarkMode] = useState(false)
+  const [copied, setCopied] = useState(false)
 
   useEffect(() => {
     const isDark =
@@ -30,6 +31,21 @@ export default function Portfolio() {
     localStorage.setItem("darkMode", newDarkMode.toString())
     document.documentElement.classList.toggle("dark", newDarkMode)
   }
+
+  const handleCopy = () => {
+  if (typeof navigator !== "undefined" && navigator.clipboard) {
+    navigator.clipboard.writeText("hello@tusharkhatri.in")
+      .then(() => {
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2000)
+      })
+      .catch((err) => {
+        console.error("Clipboard copy failed:", err)
+      })
+  } else {
+    console.warn("Clipboard API not supported.")
+  }
+}
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800 transition-colors duration-300">
@@ -98,16 +114,36 @@ export default function Portfolio() {
                   <span className="text-lg font-medium">hello@tusharkhatri.in</span>
                 </div>
 
-                <Button
-                  asChild
-                  size="lg"
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-8 py-3 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-lg group"
-                >
-                  <a href="mailto:hello@tusharkhatri.in">
-                    <Mail className="h-5 w-5 mr-2 group-hover:animate-bounce" />
-                    Send Email
-                  </a>
-                </Button>
+                <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+                  <Button
+                    asChild
+                    size="lg"
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-8 py-3 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-lg group"
+                  >
+                    <a href="mailto:hello@tusharkhatri.in" target="_blank" rel="noopener noreferrer">
+                      <Mail className="h-5 w-5 mr-2 group-hover:animate-bounce" />
+                      Send Email
+                    </a>
+                  </Button>
+
+                  <Button
+                    onClick={handleCopy}
+                    variant="outline"
+                    className="flex items-center gap-2 px-6 py-3 rounded-full"
+                  >
+                    {copied ? (
+                      <>
+                        <Check className="h-5 w-5 text-green-500" />
+                        Copied!
+                      </>
+                    ) : (
+                      <>
+                        <ClipboardCopy className="h-5 w-5" />
+                        Copy Email
+                      </>
+                    )}
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
